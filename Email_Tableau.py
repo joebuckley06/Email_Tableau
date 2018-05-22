@@ -453,7 +453,7 @@ def emails_processed(keen, email, id_list, date, other_date):
     print(date+": Done",' | ')
     return df
 
-def active_email_user_data(start, end, email, id_list, interval='monthly',function=actives):
+def active_email_user_data(keen, start, end, email, id_list, interval='monthly',function=actives):
     """
     new_start = '2018-01-01'
     new_end = '2018-05-08'
@@ -535,7 +535,7 @@ def group_reg_emails(email_data,exclude_list = [2803157]):
             email_edition_dict.setdefault((email+": "+region),[]).append(new_list)
     return(email_edition_dict)
 
-def get_Overall_email_actives(df_overall,global_ids,db_min=330000,obsession_min=140000,quartzy_min=45000,directory='/Users/jbuckley/Python Jupyter/Product',xlsx_name='Overall_subscriber_actives.xlsx'):
+def get_Overall_email_actives(df_overall,global_ids,keen,db_min=330000,obsession_min=140000,quartzy_min=45000,directory='/Users/jbuckley/Python Jupyter/Product',xlsx_name='Overall_subscriber_actives.xlsx'):
     """ Active user data for Daily Brief, Obsession, Quartzy
 
     Takes previous DataFrame with active user numbers for emails with sub-regions
@@ -565,11 +565,11 @@ def get_Overall_email_actives(df_overall,global_ids,db_min=330000,obsession_min=
         for k,v in global_ids.items():
             #print(k,v)
             v = v[0]
-            df_MAU = active_email_user_data(new_start, new_end, k, v, interval='monthly',function=actives)
-            df_WAU = active_email_user_data(new_start, new_end,k,v, interval='weekly',function=actives)
-            df_DAU = active_email_user_data(new_start, new_end,k,v, interval='daily',function=actives)
-            df_delivered = active_email_user_data(new_start, new_end,k,v, interval='daily',function=emails_delivered)
-            df_processed = active_email_user_data(new_start, new_end,k,v, interval='daily',function=emails_processed)
+            df_MAU = active_email_user_data(keen, new_start, new_end, k, v, interval='monthly',function=actives)
+            df_WAU = active_email_user_data(keen, new_start, new_end,k,v, interval='weekly',function=actives)
+            df_DAU = active_email_user_data(keen, new_start, new_end,k,v, interval='daily',function=actives)
+            df_delivered = active_email_user_data(keen, new_start, new_end,k,v, interval='daily',function=emails_delivered)
+            df_processed = active_email_user_data(keen, new_start, new_end,k,v, interval='daily',function=emails_processed)
 
             df_all = pd.merge(df_DAU,df_WAU,on=['date','email'],how='inner')
             df_all = pd.merge(df_all,df_MAU,on=['date','email'],how='inner')
@@ -647,7 +647,7 @@ def get_Overall_email_actives(df_overall,global_ids,db_min=330000,obsession_min=
     return(df_final)
 
 
-def get_Region_email_actives(df_actives,email_edition_dict,directory='Users/jbuckley/Python Jupyter/Product',xlsx_name='EMAIL_actives_regions.xlsx'):
+def get_Region_email_actives(df_actives,email_edition_dict,keen, directory='Users/jbuckley/Python Jupyter/Product',xlsx_name='EMAIL_actives_regions.xlsx'):
     """ Active user data for all emails by each edition
 
     Takes previous DataFrame with active user numbers for every email list
@@ -674,11 +674,11 @@ def get_Region_email_actives(df_actives,email_edition_dict,directory='Users/jbuc
         for k,v in email_edition_dict.items():
             #print(k,v)
             v = v[0]
-            df_MAU = active_email_user_data(new_start, new_end, k, v, interval='monthly',function=actives)
-            df_WAU = active_email_user_data(new_start, new_end,k,v, interval='weekly',function=actives)
-            df_DAU = active_email_user_data(new_start, new_end,k,v, interval='daily',function=actives)
-            df_delivered = active_email_user_data(new_start, new_end,k,v, interval='daily',function=emails_delivered)
-            df_processed = active_email_user_data(new_start, new_end,k,v, interval='daily',function=emails_processed)
+            df_MAU = active_email_user_data(keen, new_start, new_end, k, v, interval='monthly',function=actives)
+            df_WAU = active_email_user_data(keen, new_start, new_end,k,v, interval='weekly',function=actives)
+            df_DAU = active_email_user_data(keen, new_start, new_end,k,v, interval='daily',function=actives)
+            df_delivered = active_email_user_data(keen, new_start, new_end,k,v, interval='daily',function=emails_delivered)
+            df_processed = active_email_user_data(keen, new_start, new_end,k,v, interval='daily',function=emails_processed)
 
             df_all = pd.merge(df_DAU,df_WAU,on=['date','email'],how='inner')
             df_all = pd.merge(df_all,df_MAU,on=['date','email'],how='inner')
