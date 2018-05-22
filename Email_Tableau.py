@@ -174,7 +174,6 @@ def high_level_monthly(email_data):
     high_level_data['Date'] = high_level_data['month'].astype(str) + " - " + high_level_data['year'].astype(str)
     return(high_level_data)
 
-
 def global_data(regional_high_level):
     """ Takes regional high level data DF and returns global data for Daily Brief, Obsession, and Quartzy"""
 
@@ -216,7 +215,6 @@ def global_data(regional_high_level):
     global_overall['Date'] = global_overall['month'].astype(str) + " - " + global_overall['year'].astype(str)
     global_overall = global_overall[regional_high_level.columns]
     return(global_overall)
-
 
 def combine_high_level_data(regional_data,global_data,directory='/Users/jbuckley/Python Jupyter/Product',xlsx_name='EMAIL_high_level_data.xlsx'):
     """Combines 2 DataFrames, writes to excel file, returns new DF"""
@@ -308,7 +306,6 @@ def get_clicks(all_links,keen='keen_creds'):
         return(all_links)
 
 
-
 ## Active User functions
 def timeframe_gen_interval(start, end, interval='monthly', tz='US/Eastern'):
     """creates timeframe for use in making Keen API calls
@@ -348,7 +345,6 @@ def timeframe_gen_interval(start, end, interval='monthly', tz='US/Eastern'):
     timeframe = [(start_times[i], end_times[i]) for i in range(len(start_times))]
 
     return timeframe[:-1]
-
 
 def actives(keen, email, id_list, date, other_date):
     """
@@ -645,7 +641,6 @@ def get_Overall_email_actives(df_overall,global_ids,keen,db_min=330000,obsession
     os.chdir(directory)
     df_final.to_excel(xlsx_name)
     return(df_final)
-
 
 def get_Region_email_actives(df_actives,email_edition_dict,keen, directory='/Users/jbuckley/Python Jupyter/Product',xlsx_name='EMAIL_actives_regions.xlsx'):
     """ Active user data for all emails by each edition
