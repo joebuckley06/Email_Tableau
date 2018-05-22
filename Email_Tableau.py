@@ -647,7 +647,7 @@ def get_Overall_email_actives(df_overall,global_ids,keen,db_min=330000,obsession
     return(df_final)
 
 
-def get_Region_email_actives(df_actives,email_edition_dict,keen, directory='Users/jbuckley/Python Jupyter/Product',xlsx_name='EMAIL_actives_regions.xlsx'):
+def get_Region_email_actives(df_actives,email_edition_dict,keen, directory='/Users/jbuckley/Python Jupyter/Product',xlsx_name='EMAIL_actives_regions.xlsx'):
     """ Active user data for all emails by each edition
 
     Takes previous DataFrame with active user numbers for every email list
@@ -724,4 +724,6 @@ def get_Region_email_actives(df_actives,email_edition_dict,keen, directory='User
         new_actives.to_excel(xlsx_name)
         return(new_actives)
     else:
+        os.chdir(directory)
+        df_actives.to_excel(xlsx_name)
         return(df_actives)
