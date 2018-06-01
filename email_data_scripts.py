@@ -305,13 +305,13 @@ def stringer(a_list):
         return(a_list[0])
     except:
         pass
-    
+
 
 def easy_date(hour_date):
     """
     Removes hours from datetime
     """
-    return(pd.to_datetime(str(hour_date)[:11]))
+    return(hour_date.date())
 
 def subs_clean(data):
     """
@@ -335,8 +335,8 @@ def del_clean(df4):
     df_del = df_del.groupby(['email_cat','marketing_campaign_info.name','marketing_campaign_info.id'],as_index=False).agg({'delivered':sum,
                                                                                    'date': 'min'})
     df_del = df_del.sort_values('delivered',ascending=False)
-    return(df_del)    
-    
+    return(df_del)
+
 def open_clean(df5):
     """
     Cleans opens DataFrame
@@ -348,12 +348,12 @@ def open_clean(df5):
     df_open = df_open.rename(columns={'result':'opens'})
     df_open = df_open.sort_values('opens',ascending=False)
     return(df_open)
-    
+
 def unique_clean(df6):
     """
     Cleans unique opens DataFrame
     """
-    
+
     df_unq_test = df6.copy()
     df_unq_test['keen.timestamp'] = pd.to_datetime(df_unq_test['keen.timestamp'])
     df_unq_test['date'] = df_unq_test['keen.timestamp'].apply(easy_date)
@@ -361,7 +361,7 @@ def unique_clean(df6):
     df_email_uniques = pd.DataFrame(df_ubyemail).reset_index().sort_values('email',ascending=False)
     df_email_uniques = df_email_uniques.rename(columns={'email':'uniques'})
     return(df_email_uniques)
-    
+
 def unsub_clean(df1):
     """
     Cleans unsubscribe DataFrame
@@ -379,7 +379,7 @@ def bounce_clean(df2):
     df_bounce = df_bounce.groupby('marketing_campaign_info.id')['result'].sum().reset_index().sort_values('result',ascending=False)
     df_bounce = df_bounce.rename(columns={'result':'Bounces'})
     return(df_bounce)
-    
+
 def email_classify(category):
     """
     takes category and returns email
@@ -396,7 +396,7 @@ def email_classify(category):
         return("Africa Weekly")
     else:
         pass
-    
+
 def region_classify(category):
     """
     takes category and returns region
