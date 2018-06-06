@@ -111,7 +111,7 @@ def email_opened(keen, start, end):
     interval = None
     timezone = None
 
-    group_by = ('keen.timestamp', 'marketing_campaign_info.id')
+    group_by = ('marketing_campaign_info.id')
 
     data = keen.count(event,
                     timeframe=timeframe,
