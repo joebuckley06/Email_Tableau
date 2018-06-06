@@ -61,7 +61,7 @@ def email_delivered(keen, start, end):
     interval = None
     timezone = None
 
-    group_by = ('category', 'keen.timestamp','marketing_campaign_info.name', 'marketing_campaign_info.id')
+    group_by = ('category', 'marketing_campaign_info.name', 'marketing_campaign_info.id')
 
     data = keen.count(event,
                     timeframe=timeframe,
@@ -71,7 +71,7 @@ def email_delivered(keen, start, end):
                     filters=None)
 
     df = pd.DataFrame(data)
-    df['start'] = start
+    df['start'] = pd.to_datetime(str(start)[:11])
     #print(start+": Done", end=' | ')
     return df
 
@@ -121,8 +121,7 @@ def email_opened(keen, start, end):
                     filters=None)
 
     df = pd.DataFrame(data)
-    df['start'] = start
-    #print(start+": Done", end=' | ')
+    df['start'] = pd.to_datetime(str(start)[:11])
     return df
 
 def unique_opens(keen, start, end):
@@ -136,7 +135,7 @@ def unique_opens(keen, start, end):
     interval = None
     timezone = None
 
-    group_by = ('email', 'marketing_campaign_info.id','keen.timestamp')
+    group_by = ('email', 'marketing_campaign_info.id')
 
     data = keen.count(event,
                     timeframe=timeframe,
@@ -146,7 +145,7 @@ def unique_opens(keen, start, end):
                     filters=None)
 
     df = pd.DataFrame(data)
-    #print(start+": Done", end=' | ')
+    df['start'] = pd.to_datetime(str(start)[:11])
     return df
 
 def email_unsubs(keen, start, end):
@@ -342,8 +341,7 @@ def open_clean(df5):
     Cleans opens DataFrame
     """
     df_open = df5.copy()
-    df_open['keen.timestamp'] = pd.to_datetime(df_open['keen.timestamp'])
-    df_open['date'] = df_open['keen.timestamp'].apply(easy_date)
+    df_open['date'] = df_open['start'].apply(easy_date)
     df_open = df_open.groupby(['marketing_campaign_info.id'],as_index=False).agg({'result':sum})
     df_open = df_open.rename(columns={'result':'opens'})
     df_open = df_open.sort_values('opens',ascending=False)
@@ -355,8 +353,7 @@ def unique_clean(df6):
     """
 
     df_unq_test = df6.copy()
-    df_unq_test['keen.timestamp'] = pd.to_datetime(df_unq_test['keen.timestamp'])
-    df_unq_test['date'] = df_unq_test['keen.timestamp'].apply(easy_date)
+    df_unq_test['date'] = df_unq_test['start'].apply(easy_date)
     df_ubyemail = df_unq_test.groupby('marketing_campaign_info.id')['email'].nunique()
     df_email_uniques = pd.DataFrame(df_ubyemail).reset_index().sort_values('email',ascending=False)
     df_email_uniques = df_email_uniques.rename(columns={'email':'uniques'})
