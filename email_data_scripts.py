@@ -326,9 +326,8 @@ def del_clean(df4):
     Cleans delivered DataFrame
     """
     df4['email_cat'] = df4['category'].apply(stringer)
-    df_del = df4.groupby(['email_cat','keen.timestamp','marketing_campaign_info.id','marketing_campaign_info.name'],as_index=False)['result'].sum()
-    df_del['keen.timestamp'] = pd.to_datetime(df_del['keen.timestamp'])
-    df_del['date'] = df_del['keen.timestamp'].apply(easy_date)
+    df_del = df4.groupby(['email_cat','start','marketing_campaign_info.id','marketing_campaign_info.name'],as_index=False)['result'].sum()
+    df_del['date'] = df_del['start'].apply(easy_date)
     df_del = df_del.groupby(['email_cat','marketing_campaign_info.name','marketing_campaign_info.id','date'],as_index=False)['result'].sum()
     df_del = df_del.rename(columns={'result':'delivered'})
     df_del = df_del.groupby(['email_cat','marketing_campaign_info.name','marketing_campaign_info.id'],as_index=False).agg({'delivered':sum,
