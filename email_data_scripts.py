@@ -148,6 +148,38 @@ def unique_opens(keen, start, end):
     df['start'] = pd.to_datetime(str(start)[:11])
     return df
 
+def new_unique_opens(keen, campaign_id, start, end):
+    """
+    used to find the article_tags in articles
+    """
+
+    event = 'email_open'
+
+    target_property = 'email'
+
+    timeframe = {'start':start, 'end':end}
+    interval = None
+    timezone = None
+
+    group_by = ('marketing_campaign_info.id')
+
+    property_name1 = 'marketing_campaign_info.id'
+    operator1 = 'eq'
+    property_value1 = campaign_id
+
+    filters = [{"property_name":property_name1,"operator":operator1,"property_value":property_value1}]
+
+    data = keen.count_unique(event,
+                    timeframe=timeframe,
+                    target_property=target_property,
+                    interval=interval,
+                    timezone=timezone,
+                    group_by=group_by,
+                    filters=filters)
+
+    df = pd.DataFrame(data)
+    return df
+
 def email_unsubs(keen, start, end):
     """
     used to find the article_tags in articles

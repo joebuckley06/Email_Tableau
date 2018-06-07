@@ -42,8 +42,6 @@ def overall_email_data_update(email_data,keen,directory='/Users/jbuckley/Python 
         print("Delivered: Done")
         data_5 = pool.starmap(eds.email_opened, pool_iter)
         print("Opened: Done")
-        data_6 = pool.starmap(eds.unique_opens, pool_iter)
-        print("Uniques: Done")
         data_1 = pool.starmap(eds.email_unsubs, pool_iter)
         print("Unsubscribes: Done")
         data_2 = pool.starmap(eds.email_bounces, pool_iter)
@@ -69,13 +67,24 @@ def overall_email_data_update(email_data,keen,directory='/Users/jbuckley/Python 
         df2 = pd.concat(data_2)
         df2 = df2.reset_index(drop=True)
 
-        # Clean new datasets
+        # Clean new datasets (not uniques)
         df_subs = eds.subs_clean(data)
         df_del = eds.del_clean(df4)
         df_open = eds.open_clean(df5)
-        df_email_uniques = eds.unique_clean(df6)
         df_unsub = eds.unsub_clean(df1)
         df_bounce = eds.bounce_clean(df2)
+
+        # UNIQUE OPENS API CALL
+        df_del = df_del[df_del['delivered']>50].copy()
+        campaign_id_list = list(set(df_del['marketing_campaign_info.id']))
+        pool = Pool(8)
+        data_6 = pool.starmap(eds.unique_opens, pool_iter)
+        print("Uniques: Done")
+        pool.close()
+        pool.join()
+        df_email_uniques = pd.concat(data_6)
+        df_email_uniques = df_email_uniques.reset_index(drop=True)
+        df_email_uniques = df_email_uniques.rename(columns={'result':'uniques'})
 
         # Merge & clean new datasets
         dft = pd.merge(df_del,df_open,on=['marketing_campaign_info.id'],how='left')
