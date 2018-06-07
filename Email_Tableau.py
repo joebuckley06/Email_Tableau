@@ -57,9 +57,7 @@ def overall_email_data_update(email_data,keen,directory='/Users/jbuckley/Python 
         # Opened
         df5 = pd.concat(data_5)
         df5 = df5.reset_index(drop=True)
-        # Unique Opens
-        df6 = pd.concat(data_6)
-        df6 = df6.reset_index(drop=True)
+        # No Unique Opens yet
         # Unsubscribes
         df1 = pd.concat(data_1)
         df1 = df1.reset_index(drop=True)
