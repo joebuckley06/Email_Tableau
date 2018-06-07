@@ -76,7 +76,7 @@ def overall_email_data_update(email_data,keen,directory='/Users/jbuckley/Python 
         df_del = df_del[df_del['delivered']>50].copy()
         campaign_id_list = list(set(df_del['marketing_campaign_info.id']))
         pool = Pool(8)
-        data_6 = pool.starmap(eds.unique_opens, pool_iter)
+        data_6 = pool.starmap(eds.new_unique_opens, pool_iter)
         print("Uniques: Done")
         pool.close()
         pool.join()
