@@ -26,7 +26,7 @@ def overall_email_data_update(email_data,keen,directory='/Users/jbuckley/Python 
     print("Old Max. Date: "+ str(email_max))
 
     if yesterday != datetime.datetime.strftime(email_max, '%Y-%m-%d'):
-        new_start = datetime.datetime.strftime(email_max + datetime.timedelta(days=1),'%Y-%m-%d')
+        new_start = datetime.datetime.strftime(email_max - datetime.timedelta(days=5),'%Y-%m-%d')
         new_end = yesterday
         print("Start: " + new_start)
         print("End: " + new_end)
@@ -75,6 +75,7 @@ def overall_email_data_update(email_data,keen,directory='/Users/jbuckley/Python 
         # UNIQUE OPENS API CALL
         df_del = df_del[df_del['delivered']>50].copy()
         campaign_id_list = list(set(df_del['marketing_campaign_info.id']))
+        pool_iter = [(keen, i, new_start, new_end) for i in campaign_id_list]
         pool = Pool(8)
         data_6 = pool.starmap(eds.new_unique_opens, pool_iter)
         print("Uniques: Done")
@@ -133,7 +134,7 @@ def overall_email_data_update(email_data,keen,directory='/Users/jbuckley/Python 
         return(email_data)
     else:
         print("Data all good through " + datetime.datetime.strftime(email_max, '%Y-%m-%d'))
-        return(email_data)
+        return(dft, email_data)
 
 ## High level data by month functions
 def high_level_monthly(email_data):
