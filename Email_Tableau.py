@@ -133,14 +133,14 @@ def overall_email_data_update(email_data,keen,directory='/Users/jbuckley/Python 
 
         os.chdir(directory)
         email_data = email_data.sort_values('date')
-        email_data['email_cat'] = email_data['email'] + " - " + email_data['region'] 
+        email_data['email_cat'] = email_data['email'] + " - " + email_data['region']
         email_data = email_data[email_data['Subscribers']!=0]
         email_data.to_excel(xlsx_file)
         print('Updated and put into Excel through ' + new_end)
         return(email_data)
     else:
         print("Data all good through " + datetime.datetime.strftime(email_max, '%Y-%m-%d'))
-        return(dft, email_data)
+        return(email_data)
 
 ## High level data by month functions
 def high_level_monthly(email_data):
