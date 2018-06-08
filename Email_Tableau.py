@@ -26,7 +26,7 @@ def overall_email_data_update(email_data,keen,directory='/Users/jbuckley/Python 
     print("Old Max. Date: "+ str(email_max))
 
     if yesterday != datetime.datetime.strftime(email_max, '%Y-%m-%d'):
-        new_start = datetime.datetime.strftime(email_max - datetime.timedelta(days=1),'%Y-%m-%d')
+        new_start = datetime.datetime.strftime(email_max - datetime.timedelta(days=7),'%Y-%m-%d')
         new_end = yesterday
         print("Start: " + new_start)
         print("End: " + new_end)
