@@ -78,13 +78,11 @@ def overall_email_data_update(email_data,keen,directory='/Users/jbuckley/Python 
         pool_iter = [(keen, i, new_start, new_end) for i in campaign_id_list]
         pool = Pool(8)
         data_6 = pool.starmap(eds.new_unique_opens, pool_iter)
-        print("Uniques: Done")
         pool.close()
         pool.join()
         df_email_uniques = pd.concat(data_6)
         df_email_uniques = df_email_uniques.reset_index(drop=True)
         df_email_uniques = df_email_uniques.rename(columns={'result':'uniques'})
-        print("Uniques DF done")
 
         # Merge & clean new datasets
         dft = pd.merge(df_del,df_open,on=['marketing_campaign_info.id'],how='left')
@@ -92,7 +90,6 @@ def overall_email_data_update(email_data,keen,directory='/Users/jbuckley/Python 
         dft = pd.merge(dft,df_email_uniques,on=['marketing_campaign_info.id'],how='left')
         dft = pd.merge(dft,df_unsub,on=['marketing_campaign_info.id'],how='left')
         dft = pd.merge(dft,df_bounce,on=['marketing_campaign_info.id'],how='left')
-        print("Merge Done")
 
         dft = dft.groupby(['email_cat','marketing_campaign_info.name','marketing_campaign_info.id'],as_index=False).agg({'date': 'min',
                                                                                                        'Subscribers':sum,
@@ -111,8 +108,6 @@ def overall_email_data_update(email_data,keen,directory='/Users/jbuckley/Python 
         dft['date'] =  [x.date() for x in dft['date']]
         dft = dft[dft['email_cat']!='category-test'].copy()
 
-        print("groupby done")
-
         #Append to existing email data
         email_data = email_data.append(dft)
         email_data = email_data.groupby(['email_cat','marketing_campaign_info.name','marketing_campaign_info.id'],as_index=False).agg({'date': 'min',
@@ -129,7 +124,6 @@ def overall_email_data_update(email_data,keen,directory='/Users/jbuckley/Python 
         email_data['Open Rate'] = email_data['opens'] / email_data['delivered']
         email_data['Unique Open Rate'] = email_data['uniques'] / email_data['delivered']
         email_data['region'] = email_data['region'].fillna('Global')
-        print("Append and merge done")
 
         os.chdir(directory)
         email_data = email_data.sort_values('date')
