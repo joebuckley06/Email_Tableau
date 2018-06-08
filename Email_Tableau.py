@@ -111,30 +111,31 @@ def overall_email_data_update(email_data,keen,directory='/Users/jbuckley/Python 
         dft = dft[dft['email_cat']!='category-test'].copy()
 
         print("groupby done")
+        return(dft, email_data)
 
         # Append to existing email data
-        email_data = email_data.append(dft)
-        email_data = email_data.groupby(['email_cat','marketing_campaign_info.name','marketing_campaign_info.id'],as_index=False).agg({'date': 'min',
-                                                                                                       'Subscribers':sum,
-                                                                                                       'delivered':sum,
-                                                                                                       'opens':sum,
-                                                                                                       'uniques':sum,
-                                                                                                       'Unsubscribes':sum,
-                                                                                                       'Bounces':sum})
-
-
-        email_data['email'] = email_data['email_cat'].apply(eds.email_classify)
-        email_data['region'] = email_data['email_cat'].apply(eds.region_classify)
-        email_data['Open Rate'] = email_data['opens'] / email_data['delivered']
-        email_data['Unique Open Rate'] = email_data['uniques'] / email_data['delivered']
-        email_data['region'] = email_data['region'].fillna('Global')
-        print("Append and merge done")
-
-        os.chdir(directory)
-        email_data = email_data.sort_values('date')
-        email_data['email_cat'] = email_data['email_cat'].str.replace('–\xa0',"- ")
-        email_data = email_data[email_data['Subscribers']!=0]
-        email_data.to_excel(xlsx_file)
+        # email_data = email_data.append(dft)
+        # email_data = email_data.groupby(['email_cat','marketing_campaign_info.name','marketing_campaign_info.id'],as_index=False).agg({'date': 'min',
+        #                                                                                                'Subscribers':sum,
+        #                                                                                                'delivered':sum,
+        #                                                                                                'opens':sum,
+        #                                                                                                'uniques':sum,
+        #                                                                                                'Unsubscribes':sum,
+        #                                                                                                'Bounces':sum})
+        #
+        #
+        # email_data['email'] = email_data['email_cat'].apply(eds.email_classify)
+        # email_data['region'] = email_data['email_cat'].apply(eds.region_classify)
+        # email_data['Open Rate'] = email_data['opens'] / email_data['delivered']
+        # email_data['Unique Open Rate'] = email_data['uniques'] / email_data['delivered']
+        # email_data['region'] = email_data['region'].fillna('Global')
+        # print("Append and merge done")
+        #
+        # os.chdir(directory)
+        # email_data = email_data.sort_values('date')
+        # email_data['email_cat'] = email_data['email_cat'].str.replace('–\xa0',"- ")
+        # email_data = email_data[email_data['Subscribers']!=0]
+        # email_data.to_excel(xlsx_file)
         print('Updated and put into Excel through ' + new_end)
         return(email_data)
     else:
