@@ -260,7 +260,7 @@ def link_clicks(keen, start, end):
 
 def get_clicks(all_links,keen='keen_creds'):
     """ Get new click data and return dataframe"""
-    all_links['date'] = pd.to_datetime(all_links['date']), format="%m/%d/%Y")
+    all_links['date'] = pd.to_datetime(all_links['date'], format="%m/%d/%Y")
     min_clicks = min(all_links['date'])
     max_clicks = max(all_links['date'])
     yesterday = datetime.datetime.now()
