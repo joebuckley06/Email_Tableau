@@ -10,7 +10,6 @@ import importlib
 import datetime
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 from keen.client import KeenClient
 import random
 from multiprocessing.dummy import Pool

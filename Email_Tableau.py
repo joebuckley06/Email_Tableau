@@ -127,7 +127,7 @@ def overall_email_data_update(email_data,keen,directory='/Users/jbuckley/Python 
 
         os.chdir(directory)
         email_data = email_data.sort_values('date')
-        email_data['email_cat'] = email_data['email'] + " - " + email_data['region']
+        email_data['email_cat'] = email_data['email'] + " : " + email_data['region']
         email_data = email_data[email_data['Subscribers']!=0]
         email_data.to_excel(xlsx_file)
         print('Updated and put into Excel through ' + new_end)
@@ -244,7 +244,7 @@ def link_clicks(keen, start, end):
     interval = None
     timezone = None
 
-    group_by = ('keen.timestamp', 'url','marketing_campaign_info.id','geo_info.country','url_offset.index')
+    group_by = ('url','marketing_campaign_info.id','url_offset.index')
 
     data = keen.count(event,
                     timeframe=timeframe,
@@ -267,7 +267,7 @@ def get_clicks(all_links,keen='keen_creds'):
     yesterday = datetime.datetime.strftime(yesterday, '%Y-%m-%d')
 
     if yesterday != datetime.datetime.strftime(max_clicks, '%Y-%m-%d'):
-        new_start = datetime.datetime.strftime(max_clicks + datetime.timedelta(days=1),'%Y-%m-%d')
+        new_start = datetime.datetime.strftime(max_clicks - datetime.timedelta(days=30),'%Y-%m-%d')
         new_end = yesterday
         print("Start: " + new_start)
         print("End: " + new_end)
@@ -291,24 +291,24 @@ def get_clicks(all_links,keen='keen_creds'):
             """
             return(hour_date.date())
 
-        dfe['keen.timestamp'] = pd.to_datetime(dfe['keen.timestamp'])
-        dfe['date'] = dfe['keen.timestamp'].apply(easy_date)
-        email_clicks = dfe.groupby(['marketing_campaign_info.id','url','url_offset.index'],as_index=False).agg({'result':sum,
-                                                                               'start': 'min'})
+
+        new_links = dfe.groupby(['marketing_campaign_info.id','url','url_offset.index'],as_index=False).['result'].sum()
+        all_links = all_links.groupby(['marketing_campaign_info.id','url','url_offset.index'],as_index=False).['result'].sum()
+        df_clicks = pd.concat([all_links,new_links])
+        df_clicks = df_clicks.groupby(['marketing_campaign_info.id','url','url_offset.index'],as_index=False).['result'].sum()
 
         os.chdir('/Users/jbuckley/Python Jupyter/Product')
         email_data = pd.read_excel('all_email_overall_data.xlsx')
-        df_category = email_data[['marketing_campaign_info.id','marketing_campaign_info.name','email','region','email_cat','uniques']]
+        df_category = email_data[['marketing_campaign_info.id','marketing_campaign_info.name','email','region','email_cat','uniques','date']]
         df_category = df_category[df_category['email_cat']!='category-test'].copy()
 
-        new_links = pd.merge(email_clicks,df_category,how='left',on='marketing_campaign_info.id')
-        new_links =  new_links.rename(columns={'start':'date'})
-        new_links = new_links.reset_index().drop("index",1)
-        new_links['CTR'] = new_links['result'] / new_links['uniques']
-        new_links['email_cat'] = new_links['email_cat'].str.replace('–\xa0',"- ")
-        df_clicks = pd.concat([all_links,new_links])
-        df_clicks.to_excel('Email_Clicks.xls')
-        return(df_clicks)
+        updated_links = pd.merge(df_clicks,df_category,how='left',on='marketing_campaign_info.id')
+        updated_links =  updated_links.rename(columns={'start':'date'})
+        updated_links = updated_links.reset_index().drop("index",1)
+        updated_links['CTR'] = updated_links['result'] / updated_links['uniques']
+        updated_links['email_cat'] = updated_links['email'] + " : " + updated_links['region']
+        #df_clicks.to_excel('Email_Clicks.xls', index=False)
+        return(updated_links)
     else:
         print("Data all good through " + datetime.datetime.strftime(max_clicks, '%Y-%m-%d'))
         return(all_links)
