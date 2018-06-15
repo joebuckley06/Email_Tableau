@@ -260,7 +260,16 @@ def link_clicks(keen, start, end):
 
 def get_clicks(all_links,keen='keen_creds'):
     """ Get new click data and return dataframe"""
-    all_links['date'] = pd.to_datetime(all_links['date'], format="%m/%d/%Y")
+    all_links['date'] = pd.to_datetime(all_links['date'])
+
+    def easy_date(hour_date):
+        """
+        Removes hours from datetime
+        """
+        return(hour_date.date())
+
+    all_links['date'] = all_links['date'].apply(easy_date)
+    
     min_clicks = min(all_links['date'])
     max_clicks = max(all_links['date'])
     yesterday = datetime.datetime.now()
@@ -285,12 +294,6 @@ def get_clicks(all_links,keen='keen_creds'):
 
         dfe = pd.concat(data)
         dfe = dfe.reset_index(drop=True)
-
-        def easy_date(hour_date):
-            """
-            Removes hours from datetime
-            """
-            return(hour_date.date())
 
 
         new_links = dfe.groupby(['marketing_campaign_info.id','url','url_offset.index'],as_index=False)['result'].sum()
