@@ -293,10 +293,10 @@ def get_clicks(all_links,keen='keen_creds'):
             return(hour_date.date())
 
 
-        new_links = dfe.groupby(['marketing_campaign_info.id','url','url_offset.index'],as_index=False).['result'].sum()
-        all_links = all_links.groupby(['marketing_campaign_info.id','url','url_offset.index'],as_index=False).['result'].sum()
+        new_links = dfe.groupby(['marketing_campaign_info.id','url','url_offset.index'],as_index=False)['result'].sum()
+        all_links = all_links.groupby(['marketing_campaign_info.id','url','url_offset.index'],as_index=False)['result'].sum()
         df_clicks = pd.concat([all_links,new_links])
-        df_clicks = df_clicks.groupby(['marketing_campaign_info.id','url','url_offset.index'],as_index=False).['result'].sum()
+        df_clicks = df_clicks.groupby(['marketing_campaign_info.id','url','url_offset.index'],as_index=False)['result'].sum()
 
         os.chdir('/Users/jbuckley/Python Jupyter/Product')
         email_data = pd.read_excel('all_email_overall_data.xlsx')
