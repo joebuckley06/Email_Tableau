@@ -269,12 +269,14 @@ def get_clicks(all_links,keen='keen_creds'):
         return(hour_date.date())
 
     all_links['date'] = all_links['date'].apply(easy_date)
-    
+
     min_clicks = min(all_links['date'])
     max_clicks = max(all_links['date'])
     yesterday = datetime.datetime.now()
     yesterday = yesterday - datetime.timedelta(1)
     yesterday = datetime.datetime.strftime(yesterday, '%Y-%m-%d')
+    print(max_clicks)
+    print(yesterday)
 
     if yesterday != datetime.datetime.strftime(max_clicks, '%Y-%m-%d'):
         new_start = datetime.datetime.strftime(max_clicks - datetime.timedelta(days=30),'%Y-%m-%d')
