@@ -314,7 +314,7 @@ def get_clicks(all_links,keen='keen_creds'):
         updated_links['CTR'] = updated_links['result'] / updated_links['uniques']
         updated_links['email_cat'] = updated_links['email'] + " : " + updated_links['region']
         #df_clicks.to_excel('Email_Clicks.xls', index=False)
-        return(updated_links)
+        return(updated_links,df_clicks)
     else:
         print("Data all good through " + datetime.datetime.strftime(max_clicks, '%Y-%m-%d'))
         return(all_links)
