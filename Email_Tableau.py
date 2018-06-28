@@ -270,7 +270,6 @@ def get_clicks(all_links,keen='keen_creds'):
 
     all_links['date'] = all_links['date'].apply(easy_date)
 
-    min_clicks = min(all_links['date'])
     max_clicks = max(all_links['date'])
     yesterday = datetime.datetime.now()
     yesterday = yesterday - datetime.timedelta(1)
